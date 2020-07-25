@@ -12,17 +12,19 @@ class FrameExtractor:
         self.fps = int(self.vid_cap.get(cv2.CAP_PROP_FPS))
 
     def get_video_duration(self):
+        # Get duration of video
         duration = self.n_frames/self.fps
         print(f'Duration: {datetime.timedelta(seconds=duration)}')
 
     def get_n_images(self, every_x_frame):
+        # Number of images to extract
         n_images = math.floor(self.n_frames/every_x_frame) + 1
         print(f'Extracting every {every_x_frame} (nd/rd/th) frame would result in {n_images} images.')
 
     def extract_frames(self, every_x_frame, img_name, dest_path=None, img_ext='.jpg'):
+        # Extract images from video
         if not self.vid_cap.isOpened():
             self.vid_cap = cv2.VideoCapture(self.video_path)
-
         if dest_path is None:
             dest_path = os.getcwd()
         else:

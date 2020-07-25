@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="ecc1641c-0e50-4dcd-aabf-626e8ea8ffbe" name="Default Changelist" comment="" />
+    <list default="true" id="ecc1641c-0e50-4dcd-aabf-626e8ea8ffbe" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/create_training_and_validation_sets.py" beforeDir="false" afterPath="$PROJECT_DIR$/create_training_and_validation_sets.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/create_dataset.py" beforeDir="false" afterPath="$PROJECT_DIR$/data/create_dataset.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/frame_extactor.py" beforeDir="false" afterPath="$PROJECT_DIR$/data/frame_extactor.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model.py" beforeDir="false" afterPath="$PROJECT_DIR$/model.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />

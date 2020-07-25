@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 from tensorflow.keras.preprocessing import image
 import numpy as np
 
+# Initialize sequential model with 3 Conv2D layers and 3 MaxPool2D layers
 model = tf.keras.models.Sequential([
     tf.keras.layers.Conv2D(16, (3, 3), activation='relu', input_shape=(150, 150, 3)),
     tf.keras.layers.MaxPool2D((2, 2)),
@@ -17,15 +18,18 @@ model = tf.keras.models.Sequential([
     tf.keras.layers.Dense(4, activation='softmax')
 ])
 
+# Compile model
 model.compile(
     optimizer=RMSprop(),
     loss='categorical_crossentropy',
     metrics=['accuracy']
 )
 
+# Rescale images and initialize ImageDataGenerators
 train_datagen = ImageDataGenerator(rescale=1/255.0)
 validation_datagen = ImageDataGenerator(rescale=1/255.0)
 
+# Read images from training directory and initialize train_datagenerator
 TRAINING_DIR = 'data/tennis-data/training'
 train_generator = train_datagen.flow_from_directory(
     TRAINING_DIR,
@@ -34,6 +38,7 @@ train_generator = train_datagen.flow_from_directory(
     class_mode='categorical'
 )
 
+# Read images from validation directory and initialize validation_datagenerator
 VALIDATION_DIR = 'data/tennis-data/testing'
 validation_generator = validation_datagen.flow_from_directory(
     VALIDATION_DIR,
@@ -42,30 +47,41 @@ validation_generator = validation_datagen.flow_from_directory(
     class_mode='categorical'
 )
 
+# Fit model for 3 epochs
 history = model.fit_generator(
     train_generator,
-    epochs=1,
+    epochs=3,
     verbose=1,
     validation_data=validation_generator
 )
 
-# acc = history.history['accuracy']
-# val_accuracy = history.history['val_accuracy']
-# loss = history.history['loss']
-# val_loss = history.history['val_loss']
-#
-# epochs = range(len(acc))
-# plt.plot(epochs, acc, 'r', 'Training Accuracy')
-# plt.plot(epochs, val_accuracy, 'b', 'Validation Accuracy')
-#
-# plt.plot(epochs, loss, 'r', 'Training Loss')
-# plt.plot(epochs, val_loss, 'b', 'Validation Loss')
-# plt.show()
+# Get model metrics from history object
+acc = history.history['accuracy']
+val_accuracy = history.history['val_accuracy']
+loss = history.history['loss']
+val_loss = history.history['val_loss']
+
+epochs = range(len(acc))
+# Plot Accuracy
+plt.plot(epochs, acc, 'r', 'Training Accuracy')
+plt.plot(epochs, val_accuracy, 'b', 'Validation Accuracy')
+
+# Plot loss
+plt.plot(epochs, loss, 'r', 'Training Loss')
+plt.plot(epochs, val_loss, 'b', 'Validation Loss')
+plt.show()
+
+
+# Function to test a single image
+def test_single_image(model_name, filename):
+    testing_image = image.load_img(filename)
+    img = image.img_to_array(testing_image)
+    img = np.expand_dims(X, axis=0)
+
+    classes = model_name.predict(img, batch_size=10)
+    print(classes)
+    return classes
+
 
 testing_image_path = '/Users/ankushgarg/Desktop/wimbledon.jpeg'
-testing_image = image.load_img(testing_image_path, target_size=(150, 150, 3))
-x = image.img_to_array(testing_image)
-x = np.expand_dims(x, axis=0)
-
-classes = model.predict(x, batch_size=10)
-print(classes)
+test_single_image(model, testing_image_path)
