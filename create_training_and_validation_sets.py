@@ -4,9 +4,16 @@ from shutil import copyfile
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 import numpy as np
+from data.resize_images import resize_image
+from PIL import Image
 
 # Create directories for tensor flow model to get images from
 # Create Training and Testing directories for each category
+
+image_width = 128
+image_height = 128
+
+
 try:
     AUSTRALIAN_OPEN_DIR = 'data/australian_open_images/'
     TRAINING_AUSTRALIAN_DIR = 'data/tennis-data/training/australian/'
@@ -49,7 +56,6 @@ except OSError:
 def split_data(SOURCE, TRAINING, TESTING, SPLIT_SIZE=.90):
     # Get list of all images in the grand slam folder
     list_of_all_images_in_source_directory = os.listdir(SOURCE)
-
     # Shuffle all images
     list_of_all_images_in_source_directory = random.sample(list_of_all_images_in_source_directory,
                                                            int(len(list_of_all_images_in_source_directory)))
@@ -63,15 +69,20 @@ def split_data(SOURCE, TRAINING, TESTING, SPLIT_SIZE=.90):
 
     # Loop to copy training images to their designated path
     for image in training_images:
+        image_source_path = os.path.join(SOURCE, image)
         # Only move images if their size is greater than 0
-        if os.path.getsize(os.path.join(SOURCE, image)) > 0:
-            copyfile(os.path.join(SOURCE, image), os.path.join(TRAINING, image))
+        if os.path.getsize(image_source_path) > 0:
+            img = resize_image(image_source_path, image_width, image_height)
+            img.save(os.path.join(TRAINING, image))
 
     # Loop to copy testing images to their designated path
     for image in testing_images:
+        image_source_path = os.path.join(SOURCE, image)
         # Only move images if their size is greater than 0
-        if os.path.getsize(os.path.join(SOURCE, image)) > 0:
-            copyfile(os.path.join(SOURCE, image), os.path.join(TESTING, image))
+        if os.path.getsize(image_source_path) > 0:
+            img = resize_image(image_source_path, image_width, image_height)
+            img.save(os.path.join(TESTING, image))
+
 
 # Call split data on each of the grand slams
 split_data(AUSTRALIAN_OPEN_DIR, TRAINING_AUSTRALIAN_DIR, TESTING_AUSTRALIAN_DIR)
@@ -79,11 +90,13 @@ split_data(US_OPEN_DIR, TRAINING_US_DIR, TESTING_US_DIR)
 split_data(FRENCH_OPEN_DIR, TRAINING_FRENCH_DIR, TESTING_FRENCH_DIR)
 split_data(WIMBLEDON_DIR, TRAINING_WIMBLEDON_DIR, TESTING_WIMBLEDON_DIR)
 
+
 # Test single image to confirm that files were copied as intended
 def view_single_image(path, filename):
     img = mpimg.imread(os.path.join(path, filename))
     plt.imshow(img)
     plt.show()
 
+
 # View single file
-view_single_image(TRAINING_US_DIR, os.listdir(TRAINING_US_DIR)[0])
+# view_single_image(TRAINING_US_DIR, os.listdir(TRAINING_US_DIR)[0])

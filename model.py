@@ -5,9 +5,10 @@ import matplotlib.pyplot as plt
 from tensorflow.keras.preprocessing import image
 import numpy as np
 
+
 # Initialize sequential model with 3 Conv2D layers and 3 MaxPool2D layers
 model = tf.keras.models.Sequential([
-    tf.keras.layers.Conv2D(16, (3, 3), activation='relu', input_shape=(150, 150, 3)),
+    tf.keras.layers.Conv2D(16, (3, 3), activation='relu', input_shape=(128, 128, 3)),
     tf.keras.layers.MaxPool2D((2, 2)),
     tf.keras.layers.Conv2D(32, (3, 3), activation='relu'),
     tf.keras.layers.MaxPool2D((2, 2)),
@@ -18,6 +19,7 @@ model = tf.keras.models.Sequential([
     tf.keras.layers.Dense(4, activation='softmax')
 ])
 
+print(model.summary())
 # Compile model
 model.compile(
     optimizer=RMSprop(),
@@ -33,7 +35,7 @@ validation_datagen = ImageDataGenerator(rescale=1/255.0)
 TRAINING_DIR = 'data/tennis-data/training'
 train_generator = train_datagen.flow_from_directory(
     TRAINING_DIR,
-    target_size=(150, 150),
+    target_size=(128, 128),
     batch_size=10,
     class_mode='categorical'
 )
@@ -42,13 +44,13 @@ train_generator = train_datagen.flow_from_directory(
 VALIDATION_DIR = 'data/tennis-data/testing'
 validation_generator = validation_datagen.flow_from_directory(
     VALIDATION_DIR,
-    target_size=(150, 150),
+    target_size=(128, 128),
     batch_size=10,
     class_mode='categorical'
 )
 
 # Fit model for 3 epochs
-history = model.fit_generator(
+history = model.fit(
     train_generator,
     epochs=3,
     verbose=1,
@@ -76,12 +78,11 @@ plt.show()
 def test_single_image(model_name, filename):
     testing_image = image.load_img(filename)
     img = image.img_to_array(testing_image)
-    img = np.expand_dims(X, axis=0)
+    img = np.expand_dims(img, axis=0)
 
     classes = model_name.predict(img, batch_size=10)
-    print(classes)
     return classes
 
 
-testing_image_path = '/Users/ankushgarg/Desktop/wimbledon.jpeg'
+testing_image_path = '/Users/ankushgarg/Desktop/tennis-tf/data/tennis-data/testing/australian/australian_open_img_9.jpg'
 test_single_image(model, testing_image_path)
